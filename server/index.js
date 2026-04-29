@@ -28,7 +28,7 @@ const app = express();
 // - cors() : allows frontend (different origin) to communicate with backend
 // - express.json() : parses JSON data in request bodies
 // ============================================================
-app.use(cors());
+app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 app.use(express.json());
 app.use("/uploads", express.static("public/uploads"));
 
