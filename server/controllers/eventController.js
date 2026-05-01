@@ -37,7 +37,7 @@ const createEvent = async (req, res) => {
     };
 
     if (req.file) {
-      eventData.bannerImage = req.file.path;
+      eventData.bannerImage = req.file.path.replace(/^public/, "");
     }
 
     const event = new Event(eventData);
@@ -70,7 +70,7 @@ const updateEvent = async (req, res) => {
     event.price = price !== undefined ? price : event.price;
 
     if (req.file) {
-      event.bannerImage = req.file.path;
+      event.bannerImage = req.file.path.replace(/^public/, "");
     }
 
     await event.save();

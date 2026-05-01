@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 import HomePage from "./pages/HomePage";
 import EventDetailPage from "./pages/EventDetailPage";
 import LoginPage from "./pages/LoginPage";
@@ -17,6 +18,7 @@ const ProtectedRoute = () => {
 function App() {
   return (
     <BrowserRouter>
+      <Toaster position="top-right" />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/events/:id" element={<EventDetailPage />} />
