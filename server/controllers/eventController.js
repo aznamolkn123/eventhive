@@ -2,7 +2,29 @@ const Event = require("../models/Event");
 
 const getEvents = async (req, res) => {
   try {
-    const events = await Event.find().sort({ date: 1 });
+    const filter = {};
+
+    if (req.query.search) {
+      filter.title = { $regex: req.query.search, $options: "i" };
+    }
+
+    if (req.query.category) {
+      filter.category = req.query.category;
+    }
+
+    if (req.query.dateFrom) {
+      filter.date = { ...filter.date, $gte: new Date(req.query.dateFrom) };
+    }
+
+    if (req.query.dateTo) {
+      filter.date = { ...filter.date, $lte: new Date(req.query.dateTo) };
+    }
+
+    if (req.query.free === "true") {
+      filter.price = 0;
+    }
+
+    const events = await Event.find(filter).sort({ date: 1 });
     res.json(events);
   } catch (error) {
     res.status(500).json({ message: "Server error" });
