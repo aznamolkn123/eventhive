@@ -1,5 +1,7 @@
-import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom";
+import React from "react";
+import { BrowserRouter, Routes, Route, Navigate, Outlet, useNavigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
+import { setNavigate } from "./utils/api";
 import Navbar from "./components/Navbar";
 import HomePage from "./pages/HomePage";
 import EventDetailPage from "./pages/EventDetailPage";
@@ -16,9 +18,13 @@ const ProtectedRoute = () => {
   return <Outlet />;
 };
 
-function App() {
+const AppContent = () => {
+  const navigate = useNavigate();
+  React.useEffect(() => {
+    setNavigate(navigate);
+  }, [navigate]);
   return (
-    <BrowserRouter>
+    <>
       <Navbar />
       <Toaster position="top-right" />
       <Routes>
@@ -31,6 +37,14 @@ function App() {
           <Route path="/my-tickets" element={<MyTicketsPage />} />
         </Route>
       </Routes>
+    </>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AppContent />
     </BrowserRouter>
   );
 }

@@ -1,0 +1,315 @@
+.mytickets-page {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+.mytickets-header {
+  margin-bottom: 32px;
+}
+
+.mytickets-header h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #1A1A18;
+  margin: 0 0 8px;
+}
+
+.mytickets-header p {
+  color: #6B7280;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.ticket-grid {
+  display: grid;
+  gap: 24px;
+}
+
+.ticket-card {
+  background: white;
+  border: 1px solid #E5E7EB;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+
+.ticket-card:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.ticket-banner {
+  position: relative;
+  height: 180px;
+  overflow: hidden;
+}
+
+.ticket-banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ticket-banner-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #059669 0%, #10B981 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ticket-banner-placeholder svg {
+  width: 64px;
+  height: 64px;
+  color: white;
+  opacity: 0.5;
+}
+
+.ticket-status-badge {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  padding: 6px 12px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.ticket-status-badge.confirmed {
+  background: #D1FAE5;
+  color: #059669;
+}
+
+.ticket-status-badge.cancelled {
+  background: #FEE2E2;
+  color: #DC2626;
+}
+
+.ticket-content {
+  padding: 24px;
+}
+
+.ticket-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1A1A18;
+  margin: 0 0 12px;
+}
+
+.ticket-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.ticket-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #6B7280;
+  font-size: 0.875rem;
+}
+
+.ticket-meta-item svg {
+  width: 18px;
+  height: 18px;
+  color: #9CA3AF;
+  flex-shrink: 0;
+}
+
+.ticket-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-top: 20px;
+  border-top: 1px solid #F3F4F6;
+}
+
+.ticket-id-section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ticket-id-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #9CA3AF;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.ticket-id-value {
+  font-family: 'Monaco', 'Consolas', monospace;
+  font-size: 0.875rem;
+  color: #374151;
+}
+
+.ticket-qr-section {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.ticket-qr-section img {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  border: 2px solid #F3F4F6;
+}
+
+.ticket-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.ticket-btn {
+  flex: 1;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.ticket-btn-primary {
+  background: #059669;
+  color: white;
+}
+
+.ticket-btn-primary:hover {
+  background: #047857;
+}
+
+.ticket-btn-secondary {
+  background: #F3F4F6;
+  color: #374151;
+}
+
+.ticket-btn-secondary:hover {
+  background: #E5E7EB;
+}
+
+.ticket-btn-danger {
+  background: #FEF2F2;
+  color: #DC2626;
+}
+
+.ticket-btn-danger:hover {
+  background: #FEE2E2;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  background: white;
+  border-radius: 16px;
+  border: 1px solid #E5E7EB;
+}
+
+.empty-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 20px;
+  background: #F3F4F6;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.empty-icon svg {
+  width: 40px;
+  height: 40px;
+  color: #9CA3AF;
+}
+
+.empty-state h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1A1A18;
+  margin: 0 0 8px;
+}
+
+.empty-state p {
+  color: #6B7280;
+  margin: 0 0 24px;
+}
+
+.empty-state .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: #059669;
+  color: white;
+  border-radius: 10px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.empty-state .btn:hover {
+  background: #047857;
+}
+
+.error-state {
+  padding: 16px 20px;
+  background: #FEF2F2;
+  border: 1px solid #FECACA;
+  border-radius: 12px;
+  color: #DC2626;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.error-state svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.loading-state {
+  display: flex;
+  justify-content: center;
+  padding: 80px 20px;
+}
+
+@media (max-width: 640px) {
+  .mytickets-page {
+    padding: 20px 16px;
+  }
+
+  .ticket-banner {
+    height: 140px;
+  }
+
+  .ticket-content {
+    padding: 16px;
+  }
+
+  .ticket-details {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .ticket-actions {
+    flex-direction: column;
+  }
+}

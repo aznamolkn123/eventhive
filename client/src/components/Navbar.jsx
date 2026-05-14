@@ -9,19 +9,25 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const [isOrganiser, setIsOrganiser] = useState(false);
+
   useEffect(() => {
     const token = localStorage.getItem("eventhive_token");
     const user = localStorage.getItem("eventhive_user");
     if (token) {
       setIsLoggedIn(true);
       try {
-        setUserName(user ? JSON.parse(user).name : "User");
+        const parsedUser = user ? JSON.parse(user) : null;
+        setUserName(parsedUser?.name || "User");
+        setIsOrganiser(parsedUser?.role === "organiser");
       } catch {
         setUserName("User");
+        setIsOrganiser(false);
       }
     } else {
       setIsLoggedIn(false);
       setUserName("");
+      setIsOrganiser(false);
     }
   }, [location]);
 
@@ -55,12 +61,14 @@ const Navbar = () => {
             >
               Home
             </Link>
-            <Link 
-              to="/dashboard" 
-              className={`nav-link ${location.pathname === "/dashboard" ? "active" : ""}`}
-            >
-              Events
-            </Link>
+            {isOrganiser && (
+              <Link 
+                to="/dashboard" 
+                className={`nav-link ${location.pathname === "/dashboard" ? "active" : ""}`}
+              >
+                Events
+              </Link>
+            )}
           </div>
         </div>
 
@@ -68,6 +76,7 @@ const Navbar = () => {
         <div className="navbar-desktop-auth">
           {isLoggedIn ? (
             <div className="nav-links-group">
+              <Link to="/my-tickets" className="nav-link">My Tickets</Link>
               <span className="user-greeting">Hi, {userName}</span>
               <button
                 onClick={handleLogout}
@@ -112,7 +121,7 @@ const Navbar = () => {
           
           <nav className="mobile-nav-links">
             <Link to="/" onClick={() => setMenuOpen(false)} className="mobile-link">Home</Link>
-            <Link to="/dashboard" onClick={() => setMenuOpen(false)} className="mobile-link">Events</Link>
+            {isOrganiser && <Link to="/dashboard" onClick={() => setMenuOpen(false)} className="mobile-link">Events</Link>}
             {isLoggedIn && <Link to="/my-tickets" onClick={() => setMenuOpen(false)} className="mobile-link">My Tickets</Link>}
           </nav>
 

@@ -15,13 +15,23 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+let navigate;
+
+export const setNavigate = (navigationFn) => {
+  navigate = navigationFn;
+};
+
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response && error.response.status === 401) {
       localStorage.removeItem("eventhive_token");
       localStorage.removeItem("eventhive_user");
-      window.location.href = "/login";
+      if (navigate) {
+        navigate("/login", { replace: true });
+      } else {
+        window.location.href = "/login";
+      }
     }
     return Promise.reject(error);
   }

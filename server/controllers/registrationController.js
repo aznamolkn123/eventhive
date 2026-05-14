@@ -1,7 +1,10 @@
 const Event = require("../models/Event");
 const Registration = require("../models/Registration");
+const User = require("../models/User");
 const QRCode = require("qrcode");
 const { v4: uuidv4 } = require("uuid");
+const { sendEmail } = require("../utils/sendEmail");
+const { ticketConfirmationHTML } = require("../utils/emailTemplates");
 
 const registerForEvent = async (req, res) => {
     try {
@@ -39,6 +42,24 @@ const registerForEvent = async (req, res) => {
 
         event.registeredCount += 1;
         await event.save();
+
+        const attendee = await User.findById(req.user.id);
+        const qrCodeBase64 = qrCodeData.replace(/^data:image\/png;base64,/, "");
+
+        (async () => {
+            try {
+                await sendEmail(attendee.email, "Your Ticket Confirmation", ticketConfirmationHTML(
+                    attendee.name,
+                    event.title,
+                    event.date,
+                    event.location,
+                    ticketId,
+                    qrCodeBase64
+                ));
+            } catch (emailError) {
+                console.error("Failed to send confirmation email:", emailError);
+            }
+        })();
 
         res.status(201).json(registration);
     } catch (error) {

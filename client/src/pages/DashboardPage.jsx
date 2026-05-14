@@ -14,12 +14,11 @@ const DashboardPage = () => {
 
   const fetchEvents = async () => {
     try {
-      const response = await api.get("/events");
       const user = getUser();
-      const myEvents = response.data.filter(
-        (event) => event.organiser === user?._id
-      );
-      setEvents(myEvents);
+      const response = await api.get("/events", {
+        params: { organiser: user?._id },
+      });
+      setEvents(response.data);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to fetch events");
     } finally {

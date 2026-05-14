@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 :root {
   --color-primary: #0F6E56;
   --color-secondary: #D85A30;
@@ -15,12 +17,21 @@
   --space-2xl: 48px;
 }
 
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  overflow-x: hidden;
+}
+
 body {
   background-color: var(--color-bg);
   color: var(--color-text);
   font-family: system-ui, -apple-system, sans-serif;
   margin: 0;
   line-height: 1.6;
+  padding-top: 72px;
 }
 
 h1 { font-size: 2.5rem; margin: var(--space-lg) 0 var(--space-md); }
@@ -77,4 +88,24 @@ input {
 input:focus {
   outline: none;
   border-color: var(--color-primary);
+}
+
+@media print {
+  .navbar {
+    display: none !important;
+  }
+
+  .printable-ticket {
+    display: none !important;
+  }
+
+  .printable-ticket.printing {
+    display: block !important;
+    border: 1px solid #000;
+    page-break-inside: avoid;
+  }
+
+  .printable-ticket.printing button {
+    display: none !important;
+  }
 }

@@ -4,6 +4,10 @@ const getEvents = async (req, res) => {
   try {
     const filter = {};
 
+    if (req.query.organiser) {
+      filter.organiser = req.query.organiser;
+    }
+
     if (req.query.search) {
       filter.title = { $regex: req.query.search, $options: "i" };
     }
