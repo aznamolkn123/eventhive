@@ -3,7 +3,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import api from "../utils/api";
 import EventCard from "../components/EventCard";
 import SearchBar from "../components/SearchBar";
-import LoadingSpinner from "../components/LoadingSpinner";
+import EventSkeleton from "../components/EventSkeleton";
 import ErrorMessage from "../components/ErrorMessage";
 
 const CATEGORIES = [
@@ -76,7 +76,7 @@ const HomePage = () => {
       <div
         style={{
           background: "linear-gradient(135deg, var(--color-primary) 0%, #1a8f6e 100%)",
-          padding: "60px 24px",
+          padding: "100px 24px 60px",
           textAlign: "center",
           color: "#fff",
           position: "relative",
@@ -162,8 +162,16 @@ const HomePage = () => {
         </div>
 
         {loading ? (
-          <div style={{ display: "flex", justifyContent: "center", padding: "80px" }}>
-            <LoadingSpinner />
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+              gap: "24px",
+            }}
+          >
+            {[...Array(6)].map((_, i) => (
+              <EventSkeleton key={i} />
+            ))}
           </div>
         ) : error ? (
           <ErrorMessage message={error} />

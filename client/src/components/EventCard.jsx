@@ -26,28 +26,20 @@ const EventCard = ({ event }) => {
   return (
     <Link to={`/events/${event._id}`} style={{ textDecoration: "none" }}>
       <div
+        className="event-card"
         style={{
           background: "#fff",
           borderRadius: "16px",
           overflow: "hidden",
           cursor: "pointer",
           boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
-          transition: "all 0.25s ease",
           border: "1px solid var(--color-border)",
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.transform = "translateY(-4px)";
-          e.currentTarget.style.boxShadow = "0 12px 24px rgba(0,0,0,0.12)";
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.transform = "translateY(0)";
-          e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.06)";
         }}
       >
         <div style={{ position: "relative", height: "180px" }}>
           <img
             src={imageUrl}
-            alt={event.title}
+            alt={`${event.title} - ${event.category} event at ${event.location}`}
             style={{ width: "100%", height: "100%", objectFit: "cover" }}
           />
           <span

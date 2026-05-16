@@ -10,15 +10,15 @@ const registerForEvent = async (req, res) => {
     try {
         const event = await Event.findById(req.params.id);
         if (!event) {
-            return res.status(404).json({ message: "Event not found" });
+            return res.status(404).json({ message: "Event not found. It may have been deleted." });
         }
 
-        if (event.date <= new Date()) {
-            return res.status(400).json({ message: "Event has already passed" });
+        if (new Date(event.date) <= new Date()) {
+            return res.status(400).json({ message: "This event has already passed and is no longer accepting registrations." });
         }
 
         if (event.registeredCount >= event.capacity) {
-            return res.status(400).json({ message: "Event is full" });
+            return res.status(400).json({ message: `This event is fully booked (${event.capacity} spots). No more tickets available.` });
         }
 
         const existingRegistration = await Registration.findOne({
@@ -26,7 +26,7 @@ const registerForEvent = async (req, res) => {
             attendee: req.user.id,
         });
         if (existingRegistration) {
-            return res.status(409).json({ message: "Already registered" });
+            return res.status(409).json({ message: "You are already registered for this event. Check 'My Tickets' to view your booking." });
         }
 
         const ticketId = uuidv4();
@@ -61,9 +61,14 @@ const registerForEvent = async (req, res) => {
             }
         })();
 
-        res.status(201).json(registration);
+        res.status(201).json({ 
+            message: "Registration successful!",
+            ticketId,
+            registration 
+        });
     } catch (error) {
-        res.status(500).json({ message: "Server error" });
+        console.error("Registration error:", error);
+        res.status(500).json({ message: "Failed to register for event. Please try again." });
     }
 };
 
@@ -72,7 +77,8 @@ const getMyTickets = async (req, res) => {
     const registrations = await Registration.find({ attendee: req.user.id }).populate("event");
     res.json(registrations);
   } catch (error) {
-    res.status(500).json({ message: "Server error" });
+    console.error("Get tickets error:", error);
+    res.status(500).json({ message: "Failed to fetch your tickets. Please try again." });
   }
 };
 
@@ -83,7 +89,7 @@ const cancelRegistration = async (req, res) => {
       attendee: req.user.id,
     });
     if (!registration) {
-      return res.status(404).json({ message: "Registration not found" });
+      return res.status(404).json({ message: "No registration found for this event." });
     }
 
     registration.status = "cancelled";
@@ -91,9 +97,10 @@ const cancelRegistration = async (req, res) => {
 
     await Event.findByIdAndUpdate(req.params.id, { $inc: { registeredCount: -1 } });
 
-    res.json({ message: "Registration cancelled successfully" });
+    res.json({ message: "Registration cancelled successfully. Your spot has been released." });
   } catch (error) {
-    res.status(500).json({ message: "Server error" });
+    console.error("Cancel registration error:", error);
+    res.status(500).json({ message: "Failed to cancel registration. Please try again." });
   }
 };
 

@@ -9,7 +9,7 @@ router.get("/", getEvents);
 router.get("/:id", getEventById);
 router.post("/:id/register", protect, registerForEvent);
 router.post("/", protect, upload.single("bannerImage"), createEvent);
-router.put("/:id", protect, updateEvent);
+router.put("/:id", protect, upload.single("bannerImage"), updateEvent);
 router.delete("/:id", protect, deleteEvent);
 
 module.exports = router;

@@ -66,7 +66,7 @@ const Navbar = () => {
                 to="/dashboard" 
                 className={`nav-link ${location.pathname === "/dashboard" ? "active" : ""}`}
               >
-                Events
+                Dashboard
               </Link>
             )}
           </div>
@@ -101,7 +101,9 @@ const Navbar = () => {
         <button
           className="mobile-toggle-btn"
           onClick={() => setMenuOpen(!menuOpen)}
-          aria-label="Toggle menu"
+          aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
+          aria-expanded={menuOpen}
+          aria-controls="mobile-menu"
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={menuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
@@ -110,7 +112,7 @@ const Navbar = () => {
       </div>
 
       {/* Mobile Menu Overlay */}
-      <div className={`mobile-overlay ${menuOpen ? "open" : ""}`}>
+      <div id="mobile-menu" className={`mobile-overlay ${menuOpen ? "open" : ""}`}>
         <div className="overlay-backdrop" onClick={() => setMenuOpen(false)}></div>
         <div className="mobile-drawer">
           <button onClick={() => setMenuOpen(false)} className="mobile-close-btn">

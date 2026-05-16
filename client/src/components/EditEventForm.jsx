@@ -1,9 +1,9 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import api from "../utils/api";
 
 const CATEGORIES = ["music", "sports", "tech", "food", "arts", "other"];
 
-const CreateEventForm = ({ onSuccess }) => {
+const EditEventForm = ({ event, onSuccess, onCancel }) => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -23,6 +23,21 @@ const CreateEventForm = ({ onSuccess }) => {
       errorRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
     }
   }, [error]);
+
+  useEffect(() => {
+    if (event) {
+      const dateStr = event.date ? new Date(event.date).toISOString().slice(0, 16) : "";
+      setFormData({
+        title: event.title || "",
+        description: event.description || "",
+        category: event.category || "music",
+        date: dateStr,
+        location: event.location || "",
+        capacity: event.capacity || "",
+        price: event.price || "",
+      });
+    }
+  }, [event]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -51,20 +66,10 @@ const CreateEventForm = ({ onSuccess }) => {
     }
 
     try {
-      await api.post("/events", data);
-      setFormData({
-        title: "",
-        description: "",
-        category: "music",
-        date: "",
-        location: "",
-        capacity: "",
-        price: "",
-      });
-      setBannerImage(null);
+      await api.put(`/events/${event._id}`, data);
       if (onSuccess) onSuccess();
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to create event");
+      setError(err.response?.data?.message || "Failed to update event");
     } finally {
       setLoading(false);
     }
@@ -90,7 +95,6 @@ const CreateEventForm = ({ onSuccess }) => {
             value={formData.title}
             onChange={handleChange}
             required
-            placeholder="Enter event title"
             className={inputClass}
           />
         </div>
@@ -120,7 +124,6 @@ const CreateEventForm = ({ onSuccess }) => {
           onChange={handleChange}
           required
           rows={3}
-          placeholder="Describe your event"
           className={inputClass}
         />
       </div>
@@ -145,7 +148,6 @@ const CreateEventForm = ({ onSuccess }) => {
             value={formData.location}
             onChange={handleChange}
             required
-            placeholder="Venue address"
             className={inputClass}
           />
         </div>
@@ -161,7 +163,6 @@ const CreateEventForm = ({ onSuccess }) => {
             onChange={handleChange}
             required
             min={1}
-            placeholder="Max attendees"
             className={inputClass}
           />
         </div>
@@ -174,14 +175,13 @@ const CreateEventForm = ({ onSuccess }) => {
             onChange={handleChange}
             min={0}
             step="0.01"
-            placeholder="0 for free events"
             className={inputClass}
           />
         </div>
       </div>
 
       <div>
-        <label className={labelClass}>Banner Image</label>
+        <label className={labelClass}>Banner Image (leave empty to keep current)</label>
         <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg hover:border-emerald-500 transition-colors">
           <div className="space-y-1 text-center">
             {bannerImage ? (
@@ -191,26 +191,37 @@ const CreateEventForm = ({ onSuccess }) => {
                   Remove
                 </button>
               </div>
+            ) : event.bannerImage ? (
+              <div className="space-y-2">
+                <img src={event.bannerImage} alt="Current banner" className="h-32 mx-auto object-cover rounded" />
+                <p className="text-sm text-gray-500">Current image - upload new to replace</p>
+              </div>
             ) : (
               <>
                 <svg className="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
                   <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
                 <div className="flex text-sm text-gray-600 justify-center">
-                  <label htmlFor="file-upload" className="relative cursor-pointer bg-white rounded-md font-medium text-emerald-600 hover:text-emerald-500 focus-within:outline-none">
+                  <label htmlFor="file-upload-edit" className="relative cursor-pointer bg-white rounded-md font-medium text-emerald-600 hover:text-emerald-500 focus-within:outline-none">
                     <span>Upload a file</span>
-                    <input id="file-upload" name="file-upload" type="file" accept="image/*" className="sr-only" onChange={handleFileChange} />
+                    <input id="file-upload-edit" name="file-upload" type="file" accept="image/*" className="sr-only" onChange={handleFileChange} />
                   </label>
                   <p className="pl-1">or drag and drop</p>
                 </div>
-                <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
               </>
             )}
           </div>
         </div>
       </div>
 
-      <div className="flex justify-end pt-4">
+      <div className="flex justify-end gap-3 pt-4">
+        <button
+          type="button"
+          onClick={onCancel}
+          className="px-6 py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 transition-colors"
+        >
+          Cancel
+        </button>
         <button
           type="submit"
           disabled={loading}
@@ -222,15 +233,10 @@ const CreateEventForm = ({ onSuccess }) => {
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
               </svg>
-              Creating...
+              Saving...
             </>
           ) : (
-            <>
-              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-              </svg>
-              Create Event
-            </>
+            "Save Changes"
           )}
         </button>
       </div>
@@ -238,4 +244,4 @@ const CreateEventForm = ({ onSuccess }) => {
   );
 };
 
-export default CreateEventForm;
+export default EditEventForm;

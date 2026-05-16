@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate, Outlet, useNavigate } from "rea
 import { Toaster } from "react-hot-toast";
 import { setNavigate } from "./utils/api";
 import Navbar from "./components/Navbar";
+import ToastListener from "./components/ToastListener";
 import HomePage from "./pages/HomePage";
 import EventDetailPage from "./pages/EventDetailPage";
 import LoginPage from "./pages/LoginPage";
@@ -26,6 +27,7 @@ const AppContent = () => {
   return (
     <>
       <Navbar />
+      <ToastListener />
       <Toaster position="top-right" />
       <Routes>
         <Route path="/" element={<HomePage />} />

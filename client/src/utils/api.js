@@ -38,3 +38,25 @@ api.interceptors.response.use(
 );
 
 export default api;
+
+export const getErrorMessage = (error) => {
+  if (!error.response) {
+    return "Network error. Please check your internet connection.";
+  }
+  
+  const { data, status } = error.response;
+  
+  if (data?.message) {
+    return data.message;
+  }
+  
+  if (status === 500) {
+    return "Server error. Please try again later.";
+  }
+  
+  if (status === 404) {
+    return "Resource not found.";
+  }
+  
+  return "An unexpected error occurred.";
+};

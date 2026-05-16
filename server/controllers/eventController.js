@@ -31,7 +31,8 @@ const getEvents = async (req, res) => {
     const events = await Event.find(filter).sort({ date: 1 });
     res.json(events);
   } catch (error) {
-    res.status(500).json({ message: "Server error" });
+    console.error("Get events error:", error);
+    res.status(500).json({ message: "Failed to fetch events. Please try again." });
   }
 };
 
@@ -39,11 +40,12 @@ const getEventById = async (req, res) => {
   try {
     const event = await Event.findById(req.params.id);
     if (!event) {
-      return res.status(404).json({ message: "Event not found" });
+      return res.status(404).json({ message: "Event not found. It may have been deleted or never existed." });
     }
     res.json(event);
   } catch (error) {
-    res.status(500).json({ message: "Server error" });
+    console.error("Get event error:", error);
+    res.status(500).json({ message: "Failed to fetch event details." });
   }
 };
 
@@ -70,7 +72,24 @@ const createEvent = async (req, res) => {
     await event.save();
     res.status(201).json(event);
   } catch (error) {
-    res.status(500).json({ message: "Server error" });
+    console.error("Create event error:", error);
+
+    if (error.name === "ValidationError") {
+      const field = Object.keys(error.errors)[0];
+      const fieldNames = {
+        title: "Event title",
+        description: "Event description",
+        category: "Event category",
+        date: "Event date",
+        location: "Event location",
+        capacity: "Event capacity",
+        price: "Ticket price",
+      };
+      const niceField = fieldNames[field] || field;
+      return res.status(400).json({ message: `${niceField} is required or invalid.` });
+    }
+
+    res.status(500).json({ message: "Failed to create event. Please try again." });
   }
 };
 
@@ -78,22 +97,22 @@ const updateEvent = async (req, res) => {
   try {
     const event = await Event.findById(req.params.id);
     if (!event) {
-      return res.status(404).json({ message: "Event not found" });
+      return res.status(404).json({ message: "Event not found. It may have been deleted." });
     }
 
     if (event.organiser.toString() !== req.user.id) {
-      return res.status(403).json({ message: "Not authorized to update this event" });
+      return res.status(403).json({ message: "You don't have permission to edit this event." });
     }
 
     const { title, description, category, date, location, capacity, price } = req.body;
 
-    event.title = title || event.title;
-    event.description = description || event.description;
-    event.category = category || event.category;
-    event.date = date || event.date;
-    event.location = location || event.location;
-    event.capacity = capacity || event.capacity;
-    event.price = price !== undefined ? price : event.price;
+    if (title) event.title = title;
+    if (description) event.description = description;
+    if (category) event.category = category;
+    if (date) event.date = date;
+    if (location) event.location = location;
+    if (capacity) event.capacity = parseInt(capacity);
+    if (price !== undefined) event.price = parseFloat(price);
 
     if (req.file) {
       event.bannerImage = req.file.path.replace(/^public/, "");
@@ -102,7 +121,24 @@ const updateEvent = async (req, res) => {
     await event.save();
     res.json(event);
   } catch (error) {
-    res.status(500).json({ message: "Server error" });
+    console.error("Update event error:", error);
+
+    if (error.name === "ValidationError") {
+      const field = Object.keys(error.errors)[0];
+      const fieldNames = {
+        title: "Event title",
+        description: "Event description",
+        category: "Event category",
+        date: "Event date",
+        location: "Event location",
+        capacity: "Event capacity",
+        price: "Ticket price",
+      };
+      const niceField = fieldNames[field] || field;
+      return res.status(400).json({ message: `Invalid ${niceField.toLowerCase()}.` });
+    }
+
+    res.status(500).json({ message: "Failed to update event. Please try again." });
   }
 };
 
@@ -110,17 +146,18 @@ const deleteEvent = async (req, res) => {
   try {
     const event = await Event.findById(req.params.id);
     if (!event) {
-      return res.status(404).json({ message: "Event not found" });
+      return res.status(404).json({ message: "Event not found. It may have already been deleted." });
     }
 
     if (event.organiser.toString() !== req.user.id) {
-      return res.status(403).json({ message: "Not authorized to delete this event" });
+      return res.status(403).json({ message: "You don't have permission to delete this event." });
     }
 
     await Event.findByIdAndDelete(req.params.id);
-    res.json({ message: "Event deleted" });
+    res.json({ message: "Event deleted successfully." });
   } catch (error) {
-    res.status(500).json({ message: "Server error" });
+    console.error("Delete event error:", error);
+    res.status(500).json({ message: "Failed to delete event. Please try again." });
   }
 };
 

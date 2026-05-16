@@ -106,7 +106,7 @@ const EventDetailPage = () => {
           {event.bannerImage ? (
             <img
               src={event.bannerImage}
-              alt={event.title}
+              alt={`Banner image for ${event.title} - ${event.category} event`}
               className="w-full h-full object-cover"
             />
           ) : (
@@ -246,6 +246,7 @@ const EventDetailPage = () => {
                   <button
                     onClick={handleRegister}
                     disabled={isFull || isPastEvent || registering}
+                    aria-label={registering ? "Registering for event, please wait" : isFull ? "Event is full, registration unavailable" : isPastEvent ? "Event has ended, registration unavailable" : `Register for ${event.title}`}
                     className={`w-full py-4 px-6 rounded-xl font-semibold text-lg transition-all ${
                       isFull || isPastEvent
                         ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
