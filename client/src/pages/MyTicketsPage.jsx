@@ -24,13 +24,13 @@ const MyTicketsPage = () => {
     fetchTickets();
   }, []);
 
-  const handleCancel = async (ticketId) => {
+  const handleCancel = async (ticket) => {
     if (!window.confirm('Are you sure you want to cancel this registration?')) return;
     
-    setCancellingId(ticketId);
+    setCancellingId(ticket._id);
     try {
-      await api.delete(`/registrations/${ticketId}`);
-      setTickets(tickets.filter(t => t._id !== ticketId));
+      await api.delete(`/registrations/${ticket.event._id}`);
+      setTickets(tickets.filter(t => t._id !== ticket._id));
       window.dispatchEvent(new CustomEvent('toast', { 
         detail: { message: 'Registration cancelled successfully', type: 'success' } 
       }));
@@ -170,7 +170,7 @@ const MyTicketsPage = () => {
                     Print
                   </button>
                   <button
-                    onClick={() => handleCancel(ticket._id)}
+                    onClick={() => handleCancel(ticket)}
                     className="ticket-btn ticket-btn-danger"
                     disabled={cancellingId === ticket._id}
                   >
