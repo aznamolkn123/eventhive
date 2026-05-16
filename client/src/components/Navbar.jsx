@@ -46,7 +46,7 @@ const Navbar = () => {
         <div className="navbar-left">
           {/* Logo */}
           <Link 
-            to="/" 
+            to="/"
             className="navbar-logo"
             onClick={() => setMenuOpen(false)}
           >
@@ -55,15 +55,15 @@ const Navbar = () => {
 
           {/* Desktop Navigation */}
           <div className="navbar-desktop-nav-links">
-            <Link 
-              to="/" 
+            <Link
+              to="/"
               className={`nav-link ${location.pathname === "/" ? "active" : ""}`}
             >
               Home
             </Link>
             {isOrganiser && (
-              <Link 
-                to="/dashboard" 
+              <Link
+                to="/dashboard"
                 className={`nav-link ${location.pathname === "/dashboard" ? "active" : ""}`}
               >
                 Dashboard
@@ -115,30 +115,51 @@ const Navbar = () => {
       <div id="mobile-menu" className={`mobile-overlay ${menuOpen ? "open" : ""}`}>
         <div className="overlay-backdrop" onClick={() => setMenuOpen(false)}></div>
         <div className="mobile-drawer">
-          <button onClick={() => setMenuOpen(false)} className="mobile-close-btn">
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-          
-          <nav className="mobile-nav-links">
-            <Link to="/" onClick={() => setMenuOpen(false)} className="mobile-link">Home</Link>
-            {isOrganiser && <Link to="/dashboard" onClick={() => setMenuOpen(false)} className="mobile-link">Events</Link>}
-            {isLoggedIn && <Link to="/my-tickets" onClick={() => setMenuOpen(false)} className="mobile-link">My Tickets</Link>}
-          </nav>
+          <div className="mobile-drawer-top">
+            <span className="mobile-logo">EventHive</span>
+            <button onClick={() => setMenuOpen(false)} className="mobile-close-btn">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
 
-          <div className="mobile-auth-footer">
-            {isLoggedIn ? (
-              <>
-                <span className="user-greeting">Hi, {userName}</span>
-                <button onClick={handleLogout} className="mobile-btn-full btn-logout">Logout</button>
-              </>
-            ) : (
-              <>
-                <Link to="/login" onClick={() => setMenuOpen(false)} className="mobile-btn-full btn-login" style={{ border: '1px solid #e5e7eb', borderRadius: '0.75rem' }}>Login</Link>
-                <Link to="/register" onClick={() => setMenuOpen(false)} className="mobile-btn-full btn-get-started">Register</Link>
-              </>
-            )}
+          <div className="mobile-menu-content">
+            <nav className="mobile-nav-links">
+              <Link to="/" onClick={() => setMenuOpen(false)} className="mobile-link">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
+                Home
+              </Link>
+              {isOrganiser && (
+                <Link to="/dashboard" onClick={() => setMenuOpen(false)} className="mobile-link">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>
+                  Dashboard
+                </Link>
+              )}
+              {isLoggedIn && (
+                <Link to="/my-tickets" onClick={() => setMenuOpen(false)} className="mobile-link">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" /></svg>
+                  My Tickets
+                </Link>
+              )}
+            </nav>
+
+            <div className="mobile-auth-section">
+              {isLoggedIn ? (
+                <>
+                  <div className="mobile-user-info">
+                    <div className="mobile-user-avatar">{userName.charAt(0).toUpperCase()}</div>
+                    <span className="mobile-user-name">Hi, {userName}</span>
+                  </div>
+                  <button onClick={handleLogout} className="mobile-logout-btn">Logout</button>
+                </>
+              ) : (
+                <div className="mobile-auth-buttons">
+                  <Link to="/login" onClick={() => setMenuOpen(false)} className="mobile-btn-outline">Login</Link>
+                  <Link to="/register" onClick={() => setMenuOpen(false)} className="mobile-btn-filled">Register</Link>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
