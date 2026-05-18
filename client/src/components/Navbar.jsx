@@ -40,6 +40,24 @@ const Navbar = () => {
     navigate("/login");
   };
 
+  // Modern Hive Logo Component
+  const Logo = () => (
+    <div className="logo-wrapper">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M16 2L29 9.5V22.5L16 30L3 22.5V9.5L16 2Z" fill="url(#logo-grad)" stroke="#418d7c" strokeWidth="1.5"/>
+        <path d="M16 7L24 11.5V20.5L16 25L8 20.5V11.5L16 7Z" fill="white" fillOpacity="0.2"/>
+        <circle cx="16" cy="16" r="3" fill="white"/>
+        <defs>
+          <linearGradient id="logo-grad" x1="3" y1="2" x2="29" y2="30" gradientUnits="userSpaceOnUse">
+            <stop stopColor="#418d7c"/>
+            <stop offset="1" stopColor="#059669"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <span>EventHive</span>
+    </div>
+  );
+
   return (
     <nav className="navbar">
       <div className="navbar-container">
@@ -50,7 +68,7 @@ const Navbar = () => {
             className="navbar-logo"
             onClick={() => setMenuOpen(false)}
           >
-            <span>EventHive</span>
+            <Logo />
           </Link>
 
           {/* Desktop Navigation */}
@@ -116,7 +134,9 @@ const Navbar = () => {
         <div className="overlay-backdrop" onClick={() => setMenuOpen(false)}></div>
         <div className="mobile-drawer">
           <div className="mobile-drawer-top">
-            <span className="mobile-logo">EventHive</span>
+            <span className="mobile-logo">
+               <Logo />
+            </span>
             <button onClick={() => setMenuOpen(false)} className="mobile-close-btn">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
